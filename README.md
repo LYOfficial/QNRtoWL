@@ -72,6 +72,12 @@ tmux new -s QNR
 python app.py
 ```
 
+## 使用
+
+用户需访问外网IP+端口进入网页，按照要求填写即可。
+
+![a4129bdb0ceed7fe52e0334f5c0de420.png](https://img.1n.hk/f/2025/07/05/68690de5ede98.png)
+
 ## 须知
 
 本项目使用的白名单添加方案为 https://github.com/MliroLirrorsIngenuity/MeowtiWhitelist 提供的基于 MCDReforged 开发的多验证服务白名单管理插件，若采用其他方案，可以修改填充指令。
