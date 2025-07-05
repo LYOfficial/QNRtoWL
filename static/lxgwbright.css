@@ -1,0 +1,6 @@
+/* LXGW WenKai Bright SemiLight 字体应用 */
+@import url('https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkaibright/dist/LXGWBright-SemiLight/result.css');
+
+body {
+    font-family: 'LXGW WenKai Bright SemiLight', 'Consolas', 'Monaco', monospace;
+}
