@@ -32,9 +32,7 @@ pip install flask
 
  "tmux_session_name": "tex", #tmux session名称
 
- "whitelist_api": "mojang", #白名单 api
-
- "background_image_url": "https://pic.awa.ms/f/2025/07/05/6868e8f590055.png", # 背景图片
+ "background_image_url": "/static/mc.png", # 背景图片
 
  "server_name": "TecoEX 探索服", # 服务器相关内容
 
@@ -74,5 +72,9 @@ tmux new -s QNR
 python app.py
 ```
 
+## 须知
 
+本项目使用的白名单添加方案为 https://github.com/MliroLirrorsIngenuity/MeowtiWhitelist 提供的基于 MCDReforged 开发的多验证服务白名单管理插件，若采用其他方案，可以修改填充指令。
+
+若不适用原版游戏白名单，而是通过 Velocity 等外置端，采用 Multilogin 等第三方白名单，只需修改 tmux 窗口到 Velocity 对应后端，并修改指令即可。
 
