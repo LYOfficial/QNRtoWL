@@ -121,5 +121,8 @@ def submit():
 # --- 启动服务器 ---
 if __name__ == '__main__':
     port = config.get('web_port', 5000)
-    print(f"TecoEX 白名单申请站已启动，请访问 http://YOUR_SERVER_IP:{port}")
+    print(f"TecoEX 白名单申请站已启动")
+    print(f"本地访问: http://localhost:{port}")
+    print(f"内网访问: http://YOUR_SERVER_IP:{port}")
+    print(f"如已配置反向代理，可通过域名访问")
     app.run(host='0.0.0.0', port=port)
