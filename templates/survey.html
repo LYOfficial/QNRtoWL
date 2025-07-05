@@ -50,15 +50,44 @@
                             <input type="text" class="form-control" id="minecraft_id" name="minecraft_id" placeholder="例如：Steve" required>
                         </div>
 
-                        <!-- 2. 填空题示例 -->
+                        <!-- 2. 账号类型单选题 -->
                         <div class="mb-3">
-                            <label for="age" class="form-label">2. 你的年龄是？ (填空题)</label>
+                            <label class="form-label">2. 你的Minecraft账号类型 (必填，用于添加白名单)</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="account_type" id="radio_mojang" value="mojang" required>
+                                <label class="form-check-label" for="radio_mojang">Mojang正版</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="account_type" id="radio_littleskin" value="littleskin" required>
+                                <label class="form-check-label" for="radio_littleskin">LittleSkin皮肤站</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="account_type" id="radio_xbox" value="xbox" required>
+                                <label class="form-check-label" for="radio_xbox">Xbox基岩版</label>
+                            </div>
+                        </div>
+
+                        <!-- 3. QQ账号 -->
+                        <div class="mb-3">
+                            <label for="qq_number" class="form-label">3. 你的QQ账号是？ (必填)</label>
+                            <input type="text" class="form-control" id="qq_number" name="qq_number" placeholder="请输入你的QQ账号" required>
+                        </div>
+
+                        <!-- 4. QQ昵称 -->
+                        <div class="mb-3">
+                            <label for="qq_nickname" class="form-label">4. 你的QQ昵称是？ (必填)</label>
+                            <input type="text" class="form-control" id="qq_nickname" name="qq_nickname" placeholder="请输入你的QQ昵称" required>
+                        </div>
+
+                        <!-- 5. 填空题示例 -->
+                        <div class="mb-3">
+                            <label for="age" class="form-label">5. 你的年龄是？ (填空题)</label>
                             <input type="number" class="form-control" id="age" name="age" placeholder="请输入你的年龄">
                         </div>
 
-                        <!-- 3. 单选题示例 -->
+                        <!-- 6. 单选题示例 -->
                         <div class="mb-3">
-                            <label class="form-label">3. 你主要被Minecraft的哪个方面所吸引？ (单选题)</label>
+                            <label class="form-label">6. 你主要被Minecraft的哪个方面所吸引？ (单选题)</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="attraction" id="radio_build" value="建筑与创造">
                                 <label class="form-check-label" for="radio_build">建筑与创造</label>
@@ -73,9 +102,9 @@
                             </div>
                         </div>
 
-                        <!-- 4. 多选题示例 -->
+                        <!-- 7. 多选题示例 -->
                         <div class="mb-3">
-                            <label class="form-label">4. 你希望在服务器中扮演什么样的角色？ (多选题)</label>
+                            <label class="form-label">7. 你希望在服务器中扮演什么样的角色？ (多选题)</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="role" value="独狼玩家" id="check_loner">
                                 <label class="form-check-label" for="check_loner">独狼玩家，享受个人世界</label>
@@ -94,14 +123,24 @@
                             </div>
                         </div>
 
-                        <!-- 5. 开放式问题 -->
+                        <!-- 8. 开放式问题 -->
                          <div class="mb-3">
-                            <label for="introduction" class="form-label">5. 简单介绍一下你自己，以及为什么想加入本服务器。</label>
+                            <label for="introduction" class="form-label">8. 简单介绍一下你自己，以及为什么想加入本服务器。</label>
                             <textarea class="form-control" id="introduction" name="introduction" rows="3"></textarea>
+                        </div>
+
+                        <!-- 确认勾选框 -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="agree_rules" name="agree_rules" required>
+                                <label class="form-check-label" for="agree_rules">
+                                    我已认真阅读并愿意遵守服务器游玩准则
+                                </label>
+                            </div>
                         </div>
                         
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-minecraft btn-lg">提交申请</button>
+                            <button type="submit" class="btn btn-minecraft btn-lg" id="submit_btn">提交申请</button>
                         </div>
                     </form>
                 </div>

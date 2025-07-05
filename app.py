@@ -68,9 +68,35 @@ def submit():
 
     player_id = player_id.strip()
 
+    # 获取账号类型
+    account_type = processed_data.get('account_type')
+    if not account_type:
+        return jsonify({"status": "error", "message": "账号类型是必填项，请选择你的Minecraft账号类型！"}), 400
+
+    # 获取QQ账号
+    qq_number = processed_data.get('qq_number')
+    if not qq_number or not qq_number.strip():
+        return jsonify({"status": "error", "message": "QQ账号是必填项，不能为空！"}), 400
+
+    # 获取QQ昵称
+    qq_nickname = processed_data.get('qq_nickname')
+    if not qq_nickname or not qq_nickname.strip():
+        return jsonify({"status": "error", "message": "QQ昵称是必填项，不能为空！"}), 400
+
+    # 检查是否同意服务器准则
+    agree_rules = processed_data.get('agree_rules')
+    if not agree_rules:
+        return jsonify({"status": "error", "message": "必须同意遵守服务器游玩准则才能提交申请！"}), 400
+
     # 1. 准备并发送白名单指令
-    whitelist_api = config.get('whitelist_api', 'mojang')
-    whitelist_command = f"!!whitelist add {player_id} {whitelist_api}"
+    if account_type == 'mojang':
+        whitelist_command = f"!!whitelist add {player_id} Mojang"
+    elif account_type == 'littleskin':
+        whitelist_command = f"!!whitelist add {player_id} LittleSkin"
+    elif account_type == 'xbox':
+        whitelist_command = f"whitelist add {player_id}"
+    else:
+        return jsonify({"status": "error", "message": "无效的账号类型！"}), 400
     
     if not send_to_tmux(whitelist_command):
          return jsonify({"status": "error", "message": "向服务器后台发送指令失败，请联系服主处理。"}), 500

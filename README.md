@@ -47,3 +47,32 @@ pip install flask
 
 ## 安装启动
 
+### 1 克隆本项目
+
+```
+git clone https://github.com/LYOfficial/QNRtoWL.git
+```
+
+### 2 修改配置
+
+```
+cd QNRtoWL
+```
+
+参照上一章节修改配置
+
+### 3 启动 Minecraft 服务端
+
+```
+tmux new -s xxx # xxx为终端名，自定义
+```
+
+### 4 启动 QNRtoWL
+
+```
+tmux new -s QNR
+python app.py
+```
+
+
+
