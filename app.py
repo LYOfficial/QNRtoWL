@@ -94,7 +94,7 @@ def submit():
     elif account_type == 'littleskin':
         whitelist_command = f"!!whitelist add {player_id} LittleSkin"
     elif account_type == 'xbox':
-        whitelist_command = f"whitelist add {player_id}"
+        whitelist_command = f"fwhitelist add {player_id}"
     else:
         return jsonify({"status": "error", "message": "无效的账号类型！"}), 400
     
