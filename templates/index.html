@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config.rules_title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{{ config.background_image_url }}');
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        .content-box {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid #555;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 5vh;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        .btn-minecraft {
+            background-color: #5a9a5a;
+            border-color: #4a8a4a;
+            color: white;
+        }
+        .btn-minecraft:hover {
+            background-color: #4a8a4a;
+            border-color: #3a7a3a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="content-box">
+                    <h1 class="text-center mb-4">{{ config.rules_title }}</h1>
+                    <hr>
+                    <!-- 在这里填充你的服务器规则 -->
+                    <h4>一、基本准则</h4>
+                    <p>1. 尊重他人，禁止使用任何形式的歧视性或攻击性言论。</p>
+                    <p>2. 禁止作弊，包括但不限于使用外挂、透视、飞行等非原版功能。</p>
+                    <p>3. 禁止利用服务器BUG牟利或破坏服务器平衡。</p>
+                    
+                    <h4>二、建筑与环境</h4>
+                    <p>1. 不得破坏他人建筑，不得在未授权的情况下进入他人领地。</p>
+                    <p>2. 公共区域建筑需与服主或管理员沟通。</p>
+                    <p>3. 保持环境整洁，避免无意义的高频红石、浮空树等影响服务器性能的行为。</p>
+
+                    <h4>三、其他</h4>
+                    <p>未尽事宜，最终解释权归 TecoEX 管理组所有。</p>
+                    <hr>
+                    <p class="text-center">我已阅读并同意以上所有规则。</p>
+                    <div class="d-grid gap-2">
+                        <a href="/survey" class="btn btn-minecraft btn-lg">开始白名单申请</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "web_port": 12010,
+  "tmux_session_name": "tex",
+  "whitelist_api": "mojang",
+  "background_image_url": "https://pic.awa.ms/f/2025/07/05/6868e8f590055.png",
+  "server_name": "TecoEX 探索服",
+  "rules_title": "TecoEX 探索服游玩规则",
+  "survey_title": "TecoEX 探索服白名单申请问卷"
+}
