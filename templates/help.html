@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config.server_name }} - 自助服务系统</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://chinese-fonts-cdn.deno.dev/packages/lxgwwenkaibright/dist/LXGWBright-Regular/result.css" rel="stylesheet" />
+    <style>
+        body {
+            background-image: url('{{ config.background_image_url }}');
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
+            font-family: 'LXGW WenKai Bright';
+        }
+        .content-box {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #555;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2vh;
+            margin-bottom: 2vh;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        .btn-minecraft {
+            background-color: #5a9a5a;
+            border-color: #4a8a4a;
+            color: white;
+        }
+        .btn-minecraft:hover {
+            background-color: #4a8a4a;
+            border-color: #3a7a3a;
+        }
+        .btn-danger-minecraft {
+            background-color: #d9534f;
+            border-color: #d43f3a;
+            color: white;
+        }
+        .btn-danger-minecraft:hover {
+            background-color: #c9302c;
+            border-color: #ac2925;
+        }
+        .btn-info-minecraft {
+            background-color: #5bc0de;
+            border-color: #46b8da;
+            color: white;
+        }
+        .btn-info-minecraft:hover {
+            background-color: #39b3d7;
+            border-color: #269abc;
+        }
+        .status-online {
+            color: #5cb85c;
+            font-weight: bold;
+        }
+        .status-offline {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .alert-minecraft {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid #5a9a5a;
+            color: white;
+        }
+        #serverInfo {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 白名单查询区域 -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="content-box">
+                    <h1 class="text-center mb-4">{{ config.server_name }} - 自助服务系统</h1>
+                    <hr>
+                    <h4>白名单查询</h4>
+                    <p>请输入您的 Minecraft 游戏ID，检查是否在白名单中：</p>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="text" id="playerIdInput" class="form-control" placeholder="请输入您的 Minecraft 游戏ID">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-minecraft w-100" onclick="checkWhitelist()">查询白名单</button>
+                        </div>
+                    </div>
+                    <div id="whitelistResult" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 自助服务系统区域 -->
+        <div class="row justify-content-center" id="serviceSystem" style="display: none;">
+            <div class="col-md-8">
+                <div class="content-box">
+                    <h4>自助服务系统</h4>
+                    <p>欢迎，<span id="welcomePlayer"></span>！以下是可用的自助服务功能：</p>
+                    
+                    <!-- 服务器地址信息 -->
+                    <div class="mb-4">
+                        <h5>📍 服务器连接地址</h5>
+                        <div class="alert alert-minecraft">
+                            <p><strong>主要地址：</strong> je.tecostudio.cn</p>
+                            <p><strong>备用地址：</strong> mc.lvss.xyz:12000</p>
+                            <p class="mb-0 small text-warning">💡 如果主要地址无法连接，请尝试备用地址</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 服务器状态查询 -->
+                    <div class="mb-4">
+                        <h5>1. 服务器状态查询</h5>
+                        <button class="btn btn-info-minecraft" onclick="queryServerStatus()">查询服务器状态</button>
+                        <div id="serverStatus" class="mt-2"></div>
+                    </div>
+
+                    <!-- 种子查询 -->
+                    <div class="mb-4">
+                        <h5>2. 世界种子查询</h5>
+                        <button class="btn btn-info-minecraft" onclick="getSeed()">查询世界种子</button>
+                        <div id="seedResult" class="mt-2"></div>
+                    </div>
+
+                    <!-- 服务器重启 -->
+                    <div class="mb-4">
+                        <h5>3. 服务器自助重启</h5>
+                        <p class="text-warning small">⚠️ 注意：重启服务器会断开所有在线玩家的连接，请谨慎使用！</p>
+                        <button class="btn btn-danger-minecraft" onclick="confirmRestart()">重启服务器</button>
+                        <div id="restartResult" class="mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导航链接 -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="content-box text-center">
+                    <a href="/" class="btn btn-minecraft me-2">返回首页</a>
+                    <a href="/survey" class="btn btn-minecraft">白名单申请</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPlayer = '';
+
+        function showAlert(type, message, containerId) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-minecraft`;
+            alertDiv.innerHTML = message;
+            
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            container.appendChild(alertDiv);
+        }
+
+        function checkWhitelist() {
+            const playerId = document.getElementById('playerIdInput').value.trim();
+            if (!playerId) {
+                showAlert('warning', '请输入您的 Minecraft 游戏ID！', 'whitelistResult');
+                return;
+            }
+
+            const button = document.querySelector('button[onclick="checkWhitelist()"]');
+            const originalText = button.textContent;
+            button.textContent = '查询中...';
+            button.disabled = true;
+
+            fetch('/check_whitelist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ player_id: playerId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    if (data.whitelisted) {
+                        currentPlayer = data.player_id;
+                        document.getElementById('welcomePlayer').textContent = currentPlayer;
+                        showAlert('success', `恭喜！玩家 "${data.player_id}" 在白名单中，您可以使用下面的自助服务功能。`, 'whitelistResult');
+                        document.getElementById('serviceSystem').style.display = 'block';
+                    } else {
+                        showAlert('danger', `抱歉，玩家 "${data.player_id}" 不在白名单中。请先完成白名单申请。`, 'whitelistResult');
+                        document.getElementById('serviceSystem').style.display = 'none';
+                    }
+                } else {
+                    showAlert('danger', data.message || '查询失败，请稍后重试。', 'whitelistResult');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', '网络错误，请稍后重试。', 'whitelistResult');
+            })
+            .finally(() => {
+                button.textContent = originalText;
+                button.disabled = false;
+            });
+        }
+
+        function queryServerStatus() {
+            const button = document.querySelector('button[onclick="queryServerStatus()"]');
+            const originalText = button.textContent;
+            button.textContent = '查询中...';
+            button.disabled = true;
+
+            fetch('/server_status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.data) {
+                    const info = data.data;
+                    const serverAddress = data.server_address || '未知';
+                    const statusHtml = `
+                        <div class="alert alert-minecraft">
+                            <h6>服务器信息：</h6>
+                            <p><strong>服务器地址：</strong> ${serverAddress}</p>
+                            <p><strong>版本：</strong> ${info.version || '未知'}</p>
+                            <p><strong>在线人数：</strong> <span class="status-online">${info.online || 0}</span> / ${info.max || '未知'}</p>
+                            <p><strong>服务器描述：</strong> ${info.description || '无描述'}</p>
+                            <p class="status-online">🟢 服务器在线</p>
+                        </div>
+                    `;
+                    document.getElementById('serverStatus').innerHTML = statusHtml;
+                } else {
+                    showAlert('danger', '服务器离线或查询失败。', 'serverStatus');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', '查询失败，请稍后重试。', 'serverStatus');
+            })
+            .finally(() => {
+                button.textContent = originalText;
+                button.disabled = false;
+            });
+        }
+
+        function getSeed() {
+            const button = document.querySelector('button[onclick="getSeed()"]');
+            const originalText = button.textContent;
+            button.textContent = '查询中...';
+            button.disabled = true;
+
+            fetch('/get_seed', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showAlert('success', data.message, 'seedResult');
+                } else {
+                    showAlert('danger', data.message || '查询失败。', 'seedResult');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', '网络错误，请稍后重试。', 'seedResult');
+            })
+            .finally(() => {
+                button.textContent = originalText;
+                button.disabled = false;
+            });
+        }
+
+        function confirmRestart() {
+            if (confirm('确定要重启服务器吗？这将会断开所有在线玩家的连接！')) {
+                restartServer();
+            }
+        }
+
+        function restartServer() {
+            const button = document.querySelector('button[onclick="confirmRestart()"]');
+            const originalText = button.textContent;
+            button.textContent = '重启中...';
+            button.disabled = true;
+
+            fetch('/restart_server', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showAlert('success', data.message, 'restartResult');
+                } else {
+                    showAlert('danger', data.message || '重启失败。', 'restartResult');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', '网络错误，请稍后重试。', 'restartResult');
+            })
+            .finally(() => {
+                button.textContent = originalText;
+                button.disabled = false;
+            });
+        }
+
+        // 允许用户按回车键查询白名单
+        document.getElementById('playerIdInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkWhitelist();
+            }
+        });
+    </script>
+</body>
+</html>
