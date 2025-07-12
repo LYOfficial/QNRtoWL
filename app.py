@@ -121,13 +121,9 @@ def server_status():
 
 @app.route('/get_seed', methods=['POST'])
 def get_seed():
-    """查询服务器种子"""
-    # 向tmux发送种子查询命令
-    seed_command = "seed"
-    if send_to_tmux(seed_command):
-        return jsonify({"status": "success", "message": "种子查询命令已发送到服务器控制台，请查看游戏内或控制台输出"})
-    else:
-        return jsonify({"status": "error", "message": "无法发送种子查询命令"})
+    """查询服务器种子 - 已改为前端直接显示"""
+    # 直接返回成功，种子现在在前端硬编码显示
+    return jsonify({"status": "success", "message": "种子已显示"})
 
 @app.route('/restart_server', methods=['POST'])
 def restart_server():

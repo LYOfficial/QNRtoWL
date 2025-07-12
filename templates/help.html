@@ -63,6 +63,13 @@
             background-color: rgba(0, 0, 0, 0.7);
             border: 2px solid #5a9a5a;
             color: white;
+            text-align: center;
+        }
+        .alert-minecraft p {
+            margin-bottom: 0.5rem;
+        }
+        .alert-minecraft h6 {
+            margin-bottom: 1rem;
         }
         #serverInfo {
             max-height: 300px;
@@ -71,6 +78,14 @@
         .loading {
             opacity: 0.6;
             pointer-events: none;
+        }
+        .text-info {
+            color: #5bc0de !important;
+            text-decoration: none;
+        }
+        .text-info:hover {
+            color: #39b3d7 !important;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -93,6 +108,15 @@
                         </div>
                     </div>
                     <div id="whitelistResult" class="mt-3"></div>
+                    
+                    <!-- 白名单申请注意事项 -->
+                    <div class="mt-4">
+                        <div class="alert alert-minecraft">
+                            <h6>📋 白名单申请注意事项</h6>
+                            <p>申请白名单时切记选择自己的账号类型，若申请多个平台白名单需多次申请！</p>
+                            <p class="mb-0">基岩版Xbox玩家若申请后仍不能进入，请前往登记Geyser账号：<a href="https://link.geysermc.org/" target="_blank" class="text-info">https://link.geysermc.org/</a></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,9 +132,11 @@
                     <div class="mb-4">
                         <h5>📍 服务器连接地址</h5>
                         <div class="alert alert-minecraft">
-                            <p><strong>主要地址：</strong> je.tecostudio.cn</p>
-                            <p><strong>备用地址：</strong> mc.lvss.xyz:12000</p>
-                            <p class="mb-0 small text-warning">💡 如果主要地址无法连接，请尝试备用地址</p>
+                            <p><strong>Java Edition</strong></p>
+                            <p class="mb-2">je.tecostudio.cn</p>
+                            <p><strong>Bedrock Edition</strong></p>
+                            <p><strong>地址：</strong>mc.lvss.xyz</p>
+                            <p><strong>端口：</strong>12002</p>
                         </div>
                     </div>
                     
@@ -191,6 +217,8 @@
                         document.getElementById('welcomePlayer').textContent = currentPlayer;
                         showAlert('success', `恭喜！玩家 "${data.player_id}" 在白名单中，您可以使用下面的自助服务功能。`, 'whitelistResult');
                         document.getElementById('serviceSystem').style.display = 'block';
+                        // 滚动到自助服务系统区域
+                        document.getElementById('serviceSystem').scrollIntoView({ behavior: 'smooth' });
                     } else {
                         showAlert('danger', `抱歉，玩家 "${data.player_id}" 不在白名单中。请先完成白名单申请。`, 'whitelistResult');
                         document.getElementById('serviceSystem').style.display = 'none';
@@ -227,7 +255,6 @@
                             <p><strong>服务器地址：</strong> ${serverAddress}</p>
                             <p><strong>版本：</strong> ${info.version || '未知'}</p>
                             <p><strong>在线人数：</strong> <span class="status-online">${info.online || 0}</span> / ${info.max || '未知'}</p>
-                            <p><strong>服务器描述：</strong> ${info.description || '无描述'}</p>
                             <p class="status-online">🟢 服务器在线</p>
                         </div>
                     `;
@@ -252,25 +279,17 @@
             button.textContent = '查询中...';
             button.disabled = true;
 
-            fetch('/get_seed', {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    showAlert('success', data.message, 'seedResult');
-                } else {
-                    showAlert('danger', data.message || '查询失败。', 'seedResult');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showAlert('danger', '网络错误，请稍后重试。', 'seedResult');
-            })
-            .finally(() => {
-                button.textContent = originalText;
-                button.disabled = false;
-            });
+            // 直接显示种子信息
+            const seedHtml = `
+                <div class="alert alert-minecraft">
+                    <h6>世界种子：</h6>
+                    <p style="font-family: 'Courier New', monospace; font-size: 1.1em; color: #5cb85c;"><strong>-1940999848844551460</strong></p>
+                </div>
+            `;
+            document.getElementById('seedResult').innerHTML = seedHtml;
+            
+            button.textContent = originalText;
+            button.disabled = false;
         }
 
         function confirmRestart() {
