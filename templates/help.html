@@ -14,18 +14,39 @@
             background-attachment: fixed;
             color: white;
             font-family: 'LXGW WenKai Bright';
+            min-height: 100vh;
         }
-        .content-box {
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .content-card {
             background-color: rgba(0, 0, 0, 0.8);
             border: 2px solid #555;
             border-radius: 10px;
             padding: 2rem;
-            margin-top: 2vh;
-            margin-bottom: 2vh;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 1rem 0;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
         }
+        
+        .service-card {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #555;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1rem 0;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+        }
+        
         .btn-minecraft {
             background-color: #5a9a5a;
             border-color: #4a8a4a;
@@ -34,6 +55,7 @@
         .btn-minecraft:hover {
             background-color: #4a8a4a;
             border-color: #3a7a3a;
+            color: white;
         }
         .btn-danger-minecraft {
             background-color: #d9534f;
@@ -43,6 +65,7 @@
         .btn-danger-minecraft:hover {
             background-color: #c9302c;
             border-color: #ac2925;
+            color: white;
         }
         .btn-info-minecraft {
             background-color: #5bc0de;
@@ -52,7 +75,9 @@
         .btn-info-minecraft:hover {
             background-color: #39b3d7;
             border-color: #269abc;
+            color: white;
         }
+        
         .status-online {
             color: #5cb85c;
             font-weight: bold;
@@ -61,6 +86,7 @@
             color: #d9534f;
             font-weight: bold;
         }
+        
         .alert-minecraft {
             background-color: rgba(0, 0, 0, 0.7);
             border: 2px solid #5a9a5a;
@@ -72,14 +98,7 @@
         .alert-minecraft h6 {
             margin-bottom: 1rem;
         }
-        #serverInfo {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
+        
         .text-info {
             color: #5bc0de !important;
             text-decoration: none;
@@ -88,92 +107,107 @@
             color: #39b3d7 !important;
             text-decoration: underline;
         }
+        
+        .service-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        @media (max-width: 768px) {
+            .content-card, .service-card {
+                margin: 0.5rem 0;
+                padding: 1.5rem;
+            }
+            .main-container {
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- 白名单查询区域 -->
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="content-box">
-                    <h1 class="text-center mb-4">{{ config.server_name }} - 自助服务系统</h1>
-                    <hr>
-                    <h4>白名单查询</h4>
-                    <p>请输入您的 Minecraft 游戏ID，检查是否在白名单中：</p>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <input type="text" id="playerIdInput" class="form-control" placeholder="请输入您的 Minecraft 游戏ID">
-                        </div>
-                        <div class="col-md-4">
-                            <button class="btn btn-minecraft w-100" onclick="checkWhitelist()">查询白名单</button>
-                        </div>
-                    </div>
-                    <div id="whitelistResult" class="mt-3"></div>
-                    
-                    <!-- 白名单申请注意事项 -->
-                    <div class="mt-4">
-                        <div class="alert alert-minecraft">
-                            <h6>📋 白名单申请注意事项</h6>
-                            <p>申请白名单时切记选择自己的账号类型，若申请多个平台白名单需多次申请！</p>
-                            <p class="mb-0">基岩版Xbox玩家若申请后仍不能进入，请前往登记Geyser账号：<a href="https://link.geysermc.org/" target="_blank" class="text-info">https://link.geysermc.org/</a></p>
-                        </div>
-                    </div>
+    <div class="main-container">
+        <!-- 白名单查询卡片 -->
+        <div class="content-card">
+            <h1 class="text-center mb-4">{{ config.server_name }} - 自助服务系统</h1>
+            <hr>
+            <h4>白名单查询</h4>
+            <p>请输入您的 Minecraft 游戏ID，检查是否在白名单中：</p>
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" id="playerIdInput" class="form-control" placeholder="请输入您的 Minecraft 游戏ID">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-minecraft w-100" onclick="checkWhitelist()">查询白名单</button>
+                </div>
+            </div>
+            <div id="whitelistResult" class="mt-3"></div>
+            
+            <!-- 白名单申请注意事项 -->
+            <div class="mt-4">
+                <div class="alert alert-minecraft">
+                    <h6>📋 白名单申请注意事项</h6>
+                    <p>申请白名单时切记选择自己的账号类型，若申请多个平台白名单需多次申请！</p>
+                    <p class="mb-0">基岩版Xbox玩家若申请后仍不能进入，请前往登记Geyser账号：<a href="https://link.geysermc.org/" target="_blank" class="text-info">https://link.geysermc.org/</a></p>
                 </div>
             </div>
         </div>
 
-        <!-- 自助服务系统区域 -->
-        <div class="row justify-content-center" id="serviceSystem" style="display: none;">
-            <div class="col-md-8">
-                <div class="content-box">
-                    <h4>自助服务系统</h4>
-                    <p>欢迎，<span id="welcomePlayer"></span>！以下是可用的自助服务功能：</p>
-                    
-                    <!-- 服务器地址信息 -->
-                    <div class="mb-4">
-                        <h5>📍 服务器连接地址</h5>
-                        <div class="alert alert-minecraft">
+        <!-- 自助服务系统卡片 -->
+        <div class="service-card hidden" id="serviceSystem">
+            <h4 class="text-center mb-4">自助服务系统</h4>
+            <p class="text-center">欢迎，<span id="welcomePlayer" class="text-success fw-bold"></span>！以下是可用的自助服务功能：</p>
+            
+            <!-- 服务器地址信息 -->
+            <div class="service-section">
+                <h5>📍 服务器连接地址</h5>
+                <div class="alert alert-minecraft">
+                    <div class="row">
+                        <div class="col-md-6">
                             <p><strong>Java Edition</strong></p>
                             <p class="mb-2">je.tecostudio.cn</p>
+                        </div>
+                        <div class="col-md-6">
                             <p><strong>Bedrock Edition</strong></p>
                             <p><strong>地址：</strong>mc.lvss.xyz</p>
                             <p><strong>端口：</strong>12002</p>
                         </div>
                     </div>
-                    
-                    <!-- 服务器状态查询 -->
-                    <div class="mb-4">
-                        <h5>1. 服务器状态查询</h5>
-                        <button class="btn btn-info-minecraft" onclick="queryServerStatus()">查询服务器状态</button>
-                        <div id="serverStatus" class="mt-2"></div>
-                    </div>
-
-                    <!-- 种子查询 -->
-                    <div class="mb-4">
-                        <h5>2. 世界种子查询</h5>
-                        <button class="btn btn-info-minecraft" onclick="getSeed()">查询世界种子</button>
-                        <div id="seedResult" class="mt-2"></div>
-                    </div>
-
-                    <!-- 服务器重启 -->
-                    <div class="mb-4">
-                        <h5>3. 服务器自助重启</h5>
-                        <p class="text-warning small">⚠️ 注意：重启服务器会断开所有在线玩家的连接，请谨慎使用！</p>
-                        <button class="btn btn-danger-minecraft" onclick="confirmRestart()">重启服务器</button>
-                        <div id="restartResult" class="mt-2"></div>
-                    </div>
                 </div>
+            </div>
+            
+            <!-- 服务器状态查询 -->
+            <div class="service-section">
+                <h5>1. 服务器状态查询</h5>
+                <button class="btn btn-info-minecraft" onclick="queryServerStatus()">查询服务器状态</button>
+                <div id="serverStatus" class="mt-2"></div>
+            </div>
+
+            <!-- 种子查询 -->
+            <div class="service-section">
+                <h5>2. 世界种子查询</h5>
+                <button class="btn btn-info-minecraft" onclick="getSeed()">查询世界种子</button>
+                <div id="seedResult" class="mt-2"></div>
+            </div>
+
+            <!-- 服务器重启 -->
+            <div class="service-section">
+                <h5>3. 服务器自助重启</h5>
+                <p class="text-warning small">⚠️ 注意：重启服务器会断开所有在线玩家的连接，请谨慎使用！</p>
+                <button class="btn btn-danger-minecraft" onclick="confirmRestart()">重启服务器</button>
+                <div id="restartResult" class="mt-2"></div>
             </div>
         </div>
 
-        <!-- 导航链接 -->
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="content-box text-center">
-                    <a href="/" class="btn btn-minecraft me-2">返回首页</a>
-                    <a href="/survey" class="btn btn-minecraft">白名单申请</a>
-                </div>
-            </div>
+        <!-- 导航链接卡片 -->
+        <div class="content-card text-center">
+            <a href="/" class="btn btn-minecraft me-2">返回首页</a>
+            <a href="/survey" class="btn btn-minecraft">白名单申请</a>
         </div>
     </div>
 
@@ -217,12 +251,18 @@
                         currentPlayer = data.player_id;
                         document.getElementById('welcomePlayer').textContent = currentPlayer;
                         showAlert('success', `恭喜！玩家 "${data.player_id}" 在白名单中，您可以使用下面的自助服务功能。`, 'whitelistResult');
-                        document.getElementById('serviceSystem').style.display = 'block';
-                        // 滚动到自助服务系统区域
-                        document.getElementById('serviceSystem').scrollIntoView({ behavior: 'smooth' });
+                        
+                        // 显示自助服务系统
+                        const serviceSystem = document.getElementById('serviceSystem');
+                        serviceSystem.classList.remove('hidden');
+                        
+                        // 平滑滚动到自助服务系统
+                        setTimeout(() => {
+                            serviceSystem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 100);
                     } else {
                         showAlert('danger', `抱歉，玩家 "${data.player_id}" 不在白名单中。请先完成白名单申请。`, 'whitelistResult');
-                        document.getElementById('serviceSystem').style.display = 'none';
+                        document.getElementById('serviceSystem').classList.add('hidden');
                     }
                 } else {
                     showAlert('danger', data.message || '查询失败，请稍后重试。', 'whitelistResult');
