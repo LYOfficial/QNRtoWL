@@ -55,14 +55,13 @@ def check_whitelist(player_id):
 
 def query_server_status():
     """查询Minecraft服务器状态"""
-    # 尝试多个服务器地址
-    servers_to_try = [
-        (config.get('server_host', 'je.tecostudio.cn'), config.get('server_port', 25565)),
-        (config.get('server_host_alt', 'mc.lvss.xyz'), config.get('server_port_alt', 12000)),
-        (config.get('server_host_local', 'localhost'), config.get('server_port_local', 12000))
-    ]
+    # 只查询指定的服务器地址
+    server_host = 'mc.lvss.xyz'
+    server_port = 12000
+    display_address = 'je.tecostudio.cn'  # 对外显示的地址
+    max_retries = 3  # 最大重试次数
     
-    for server_host, server_port in servers_to_try:
+    for attempt in range(max_retries):
         try:
             response = requests.post(
                 'https://ping.lvjia.cc/mcapi',
@@ -72,13 +71,15 @@ def query_server_status():
             if response.status_code == 200:
                 result = response.json()
                 if result.get('status') == 'success':
-                    # 添加服务器地址信息到返回结果
-                    result['server_address'] = f"{server_host}:{server_port}"
+                    # 显示对外的服务器地址而非实际查询地址
+                    result['server_address'] = display_address
                     return result
-        except requests.RequestException:
-            continue
+        except requests.RequestException as e:
+            print(f"服务器状态查询尝试 {attempt + 1} 失败: {e}")
+            if attempt < max_retries - 1:  # 不是最后一次尝试
+                continue
     
-    return {"status": "error", "message": "所有服务器地址都无法连接"}
+    return {"status": "error", "message": "服务器连接失败，请稍后重试"}
 
 # --- 网页路由 ---
 
