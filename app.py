@@ -1,6 +1,7 @@
 import os
 import json
 import subprocess
+import requests
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 
@@ -36,6 +37,50 @@ def send_to_tmux(command):
         print(f"错误: 无法向 tmux 会话 '{session_name}' 发送指令。请确保会话存在且正在运行。错误: {e}")
         return False
 
+def check_whitelist(player_id):
+    """检查玩家是否在白名单中（通过检查历史提交记录）"""
+    if not os.path.exists('submissions'):
+        return False
+    
+    for filename in os.listdir('submissions'):
+        if filename.startswith('submission_') and filename.endswith('.json'):
+            try:
+                with open(os.path.join('submissions', filename), 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    if data.get('minecraft_id', '').strip().lower() == player_id.strip().lower():
+                        return True
+            except (json.JSONDecodeError, IOError):
+                continue
+    return False
+
+def query_server_status():
+    """查询Minecraft服务器状态"""
+    # 只查询指定的服务器地址
+    server_host = 'mc.lvss.xyz'
+    server_port = 12000
+    display_address = 'je.tecostudio.cn'  # 对外显示的地址
+    max_retries = 3  # 最大重试次数
+    
+    for attempt in range(max_retries):
+        try:
+            response = requests.post(
+                'https://ping.lvjia.cc/mcapi',
+                json={'host': server_host, 'port': server_port},
+                timeout=10
+            )
+            if response.status_code == 200:
+                result = response.json()
+                if result.get('status') == 'success':
+                    # 显示对外的服务器地址而非实际查询地址
+                    result['server_address'] = display_address
+                    return result
+        except requests.RequestException as e:
+            print(f"服务器状态查询尝试 {attempt + 1} 失败: {e}")
+            if attempt < max_retries - 1:  # 不是最后一次尝试
+                continue
+    
+    return {"status": "error", "message": "服务器连接失败，请稍后重试"}
+
 # --- 网页路由 ---
 
 @app.route('/')
@@ -47,6 +92,48 @@ def index():
 def survey():
     """问卷页面"""
     return render_template('survey.html', config=config)
+
+@app.route('/help')
+def help_page():
+    """帮助页面"""
+    return render_template('help.html', config=config)
+
+@app.route('/check_whitelist', methods=['POST'])
+def check_whitelist_api():
+    """检查白名单API"""
+    data = request.get_json()
+    player_id = data.get('player_id', '').strip()
+    
+    if not player_id:
+        return jsonify({"status": "error", "message": "请输入有效的游戏ID"})
+    
+    is_whitelisted = check_whitelist(player_id)
+    return jsonify({
+        "status": "success",
+        "whitelisted": is_whitelisted,
+        "player_id": player_id
+    })
+
+@app.route('/server_status', methods=['GET'])
+def server_status():
+    """查询服务器状态API"""
+    result = query_server_status()
+    return jsonify(result)
+
+@app.route('/get_seed', methods=['POST'])
+def get_seed():
+    """查询服务器种子 - 已改为前端直接显示"""
+    # 直接返回成功，种子现在在前端硬编码显示
+    return jsonify({"status": "success", "message": "种子已显示"})
+
+@app.route('/restart_server', methods=['POST'])
+def restart_server():
+    """服务器自助重启"""
+    restart_command = "mcdreforged"
+    if send_to_tmux(restart_command):
+        return jsonify({"status": "success", "message": "服务器重启命令已发送，服务器将在稍后重启"})
+    else:
+        return jsonify({"status": "error", "message": "无法发送重启命令"})
 
 @app.route('/submit', methods=['POST'])
 def submit():

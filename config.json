@@ -4,5 +4,11 @@
   "background_image_url": "/static/mc.png",
   "server_name": "TecoEX 探索服",
   "rules_title": "TecoEX 探索服游玩规则",
-  "survey_title": "TecoEX 探索服白名单申请问卷"
+  "survey_title": "TecoEX 探索服白名单申请问卷",
+  "server_host": "je.tecostudio.cn",
+  "server_port": 25565,
+  "server_host_alt": "mc.lvss.xyz",
+  "server_port_alt": 12000,
+  "server_host_local": "localhost",
+  "server_port_local": 12000
 }
